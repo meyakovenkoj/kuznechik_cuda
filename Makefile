@@ -2,8 +2,7 @@ CFLAGS = -std=c99 -I./include -O3 -Wall -Werror -pedantic
 CXXFLAGS = -std=c++11 -I./include -O3
 CC = gcc
 NVCC = nvcc
-# TODO: use -Xptxas -dlcm=cg
-NVCCFLAGS = -Xptxas -dlcm=cg -Wno-deprecated-gpu-targets --use_fast_math -m64 \
+NVCCFLAGS = -Wno-deprecated-gpu-targets --use_fast_math -m64 \
 		-gencode arch=compute_35,code=sm_35 -gencode arch=compute_37,code=sm_37 \
 		-gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52 \
 		-gencode arch=compute_60,code=sm_60 -gencode arch=compute_61,code=sm_61 \
@@ -14,13 +13,15 @@ LDFLAGS = -L /usr/local/cuda/lib64 -lcudart
 EXECUTABLE := main.exe
 CPU_TEST := cpu_test.exe
 CPU_MAIN := cpu_main.exe
+GEN_MAIN := gen.exe
 CU_FILES   := cuda_helper.cu cuda_kuznechik.cu
 CC_FILES   := main.c input.c kuznechik.c cpu_test.c
 SRCDIR=src
 OBJDIR=build
 OBJS=$(OBJDIR)/input.o $(OBJDIR)/cuda_helper.o $(OBJDIR)/cuda_kuznechik.o $(OBJDIR)/main.o $(OBJDIR)/kuznechik.o
 CPU_OBJS=$(OBJDIR)/kuznechik.o $(OBJDIR)/cpu_test.o $(OBJDIR)/cpu_kuznechik.o
-CPU_TEST_OBJS=$(OBJDIR)/cpu_kuznechik.o $(OBJDIR)/kuznechik.o $(OBJDIR)/cpu_main.o $(OBJDIR)/input.o 
+CPU_TEST_OBJS=$(OBJDIR)/cpu_kuznechik.o $(OBJDIR)/kuznechik.o $(OBJDIR)/cpu_main.o $(OBJDIR)/input.o
+GEN_SRC=$(SRCDIR)/generator.c $(SRCDIR)/input.c 
 
 .PHONY: all dirs clean
 
@@ -47,5 +48,8 @@ $(CPU_TEST): $(CPU_OBJS)
 $(CPU_MAIN): $(CPU_TEST_OBJS)
 	$(CC) -o $@ $(CPU_TEST_OBJS)
 
+$(GEN_MAIN): $(SRCDIR)/generator.c $(SRCDIR)/input.c 
+	$(CC) $(CFLAGS) $(GEN_SRC) -o $@
+
 clean:
-	rm -f build/* $(EXECUTABLE) $(CPU_MAIN) $(CPU_TEST)
+	rm -f build/* $(EXECUTABLE) $(CPU_MAIN) $(CPU_TEST) $(GEN_MAIN)

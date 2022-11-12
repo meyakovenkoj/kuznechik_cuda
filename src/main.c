@@ -100,7 +100,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    uint8_t rseed[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0, 6, 24};
+    uint8_t rseed[8] = {0, 5, 1, 0, 0, 0, 6, 24};
 
 	uint8_t *ls_matrix = (uint8_t *)malloc(sizeof(uint8_t) * 256*16*16);
 	uint8_t rkey[160];
