@@ -24,7 +24,7 @@ int main()
 	{
 		log_data(rkey + i * 16, "rkey");
 	}
-	encrypt(data, ls_matrix, rkey);
+	gostencrypt(data, ls_matrix, rkey);
 	log_data(data, "res");
 	for (int i = 0; i < 16; i++) {
 		if (data[i] != ethalon[i]) {

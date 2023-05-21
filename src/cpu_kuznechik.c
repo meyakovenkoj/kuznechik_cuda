@@ -8,7 +8,7 @@ void xor_64_2(uint64_t *result, uint64_t *block)
 	result[1] ^= block[1];
 }
 
-void encrypt(uint8_t *block, uint8_t *ls_matrix, uint8_t *rkey)
+void gostencrypt(uint8_t *block, uint8_t *ls_matrix, uint8_t *rkey)
 {
 	for (int i = 0; i < 9; ++i)
 	{
@@ -28,11 +28,11 @@ void ctr_encrypt(uint8_t *data, uint64_t dataLen, uint8_t *ls_matrix, uint8_t *i
 	uint64_t ctr[2];
     ctr[0] = 0;
     ctr[1] = ((uint64_t *)iv)[0];
-    printf("blocks %lu\n", dataLen);
+    printf("blocks %llu\n", dataLen);
 	for (uint64_t i = 0; i < dataLen; i++) {
 		ctr[0] = i;
         ctr[1] = ((uint64_t *)iv)[0];
-		encrypt((BYTE *)ctr, ls_matrix, rkey);
+		gostencrypt((BYTE *)ctr, ls_matrix, rkey);
     	xor_64_2((uint64_t *)(data + 16 * i), ctr);
 	}
 }
