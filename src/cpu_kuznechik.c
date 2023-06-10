@@ -23,7 +23,7 @@ void gostencrypt(uint8_t *block, uint8_t *ls_matrix, uint8_t *rkey)
 	xor_64_2((uint64_t *)block, (uint64_t *)(rkey + 9 * 16));
 }
 
-void ctr_encrypt(uint8_t *data, uint64_t dataLen, uint8_t *ls_matrix, uint8_t *iv, uint8_t *rkey)
+void internal_ctr_encrypt(uint8_t *data, uint64_t dataLen, uint8_t *ls_matrix, uint8_t *iv, uint8_t *rkey)
 {
 	uint64_t ctr[2];
     ctr[0] = 0;

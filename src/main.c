@@ -93,6 +93,7 @@ int main(int argc, char **argv)
     in_size += padding;
     BYTE *in_data = (BYTE *)calloc(in_size, sizeof(BYTE));
     BYTE *out_data = (BYTE *)malloc(in_size * sizeof(BYTE));
+    BYTE *cur_data = out_data;
 
     err = ReadData(in_size - padding, in_data, infile);
     if (err) {
@@ -100,27 +101,29 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    uint8_t rseed[8] = {0, 5, 1, 0, 0, 0, 6, 24};
+    // uint8_t rseed[8] = {0, 5, 1, 0, 0, 0, 6, 24};
 
-	uint8_t *ls_matrix = (uint8_t *)malloc(sizeof(uint8_t) * 256*16*16);
-	uint8_t rkey[160];
-    create_ls_matrix(ls_matrix, key_data, rkey);
+	// uint8_t *ls_matrix = (uint8_t *)malloc(sizeof(uint8_t) * 256*16*16);
+	// uint8_t rkey[160];
+    // create_ls_matrix(ls_matrix, key_data, rkey);
     FILE *outfile = fopen(output, "wb");
 
-    #ifdef CPU_PROG
     clock_t start, end;
     double cpu_time_used;
     start = clock();
-	ctr_encrypt(in_data, in_size / 16, ls_matrix, rseed, rkey);
+    // cur_data = out_data;
+    // #ifdef CPU_PROG
+	// internal_ctr_encrypt(in_data, in_size / 16, ls_matrix, rseed, rkey);
+    // cur_data = in_data;
+    // #else
+    // encrypt_cuda(in_data, out_data, ls_matrix, rkey, rseed, in_size / 16);
+    // #endif
+    ctr_encrypt(in_data, cur_data, key_data, in_size / 16);
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf(" %f sec elapsed, %d MBs processed\n", cpu_time_used, (in_size / 1024 / 1024));
     printf("Encryption speed: %f MB/s\n", (in_size / 1024 / 1024) / cpu_time_used);
-    err = WriteData(in_size - padding, in_data, outfile);
-    #else
-    encrypt_cuda(in_data, out_data, ls_matrix, rkey, rseed, in_size / 16);
-    err = WriteData(in_size - padding, out_data, outfile);
-    #endif
+    err = WriteData(in_size - padding, cur_data, outfile);
     if (err) {
         fprintf(stderr, "Failed to write output data\n");
         return EXIT_FAILURE;
@@ -128,6 +131,6 @@ int main(int argc, char **argv)
     fclose(outfile);
     free(in_data);
     free(out_data);
-    free(ls_matrix);
+    // free(ls_matrix);
     return EXIT_SUCCESS;
 }

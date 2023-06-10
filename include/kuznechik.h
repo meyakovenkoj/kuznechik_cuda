@@ -5,6 +5,7 @@
 
 // void encrypt(uint8_t *block, uint8_t *ls_matrix, uint8_t *rkey);
 // void xor_64_2(uint64_t *result, uint64_t *block);
+void ctr_encrypt(uint8_t *inparray, uint8_t *outarray, uint8_t *key_data, const uint32_t numblock);
 void create_ls_matrix(uint8_t *ls_matrix, uint8_t *key, uint8_t *rkey);
 void expand_key(uint8_t *key, uint8_t *extkey);
 void log_data(uint8_t *data, const char *prefix);
