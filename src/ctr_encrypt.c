@@ -1,5 +1,9 @@
 #include "kuznechik.h"
+#ifdef CPU_PROG
 #include "cpu_kuznechik.h"
+#else
+#include "cuda_kuznechik.h"
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -16,7 +20,7 @@ void ctr_encrypt(uint8_t *inparray,
 	internal_ctr_encrypt(inparray, numblock, ls_matrix, rseed, rkey);
     memcpy(outarray, inparray, numblock*16);
     #else
-    encrypt_cuda((const uint8_t *)inparray, *outarray, ls_matrix, rkey, rseed, numblock);
+    encrypt_cuda((const uint8_t *)inparray, outarray, ls_matrix, rkey, rseed, numblock);
     #endif
     free(ls_matrix);
 }

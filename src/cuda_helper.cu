@@ -18,6 +18,7 @@ void IntCudaInitAndConfig(struct IntCudaConfig *config, int block_number)
         cudaGetDeviceProperties(&props[i], i);
         CUDA_ERROR();
         int num_sm = props[i].multiProcessorCount;
+        printf("Compute Capability: %d.%d\n", props[i].major, props[i].minor);
         printf("SM: %d\n", num_sm);
         printf("Threads per sm: %d\n", props[i].maxThreadsPerMultiProcessor);
         printf("Threads per block: %d\n", props[i].maxThreadsPerBlock);

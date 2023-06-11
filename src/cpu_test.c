@@ -2,7 +2,7 @@
 #include "cpu_kuznechik.h"
 #include <stdio.h>
 
-int main()
+int main(void)
 {
 	uint8_t key[32] = {
 		0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
