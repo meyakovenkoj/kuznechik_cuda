@@ -6,7 +6,7 @@ else()
     set(CPU_SOURCES cpu_kuznechik.c)
 endif()
 
-add_library(gostcrypt STATIC ${CUDA_SOURCES} ${CPU_SOURCES} kuznechik.c ctr_encrypt.c)
+add_library(gostcrypt SHARED ${CUDA_SOURCES} ${CPU_SOURCES} kuznechik.c ctr_encrypt.c)
 target_compile_features(gostcrypt PUBLIC cxx_std_11)
 set_target_properties(gostcrypt PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(gostcrypt PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
